@@ -8,6 +8,9 @@
     "build": "tsc",
     "start": "node dist/index.js"
   },
+  "engines": {
+    "node": "24.x"
+  },
   "author": "",
   "license": "ISC",
   "description": "",
