@@ -1,0 +1,75 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  workoutPlans WorkoutPlan[]
+}
+
+model WorkoutPlan {
+  id        String   @id @default(uuid())
+  userId    String
+  name      String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+
+  workoutDays WorkoutDay[]
+}
+
+enum WeekDay {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+model WorkoutDay {
+  id            String   @id @default(uuid())
+  workoutPlanId String
+  name          String
+  isRestDay     Boolean  @default(false)
+  weekDay       WeekDay
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workoutPlan WorkoutPlan @relation(fields: [workoutPlanId], references: [id])
+
+  exercises WorkoutExercise[]
+}
+
+model WorkoutExercise {
+  id                String   @id @default(uuid())
+  workoutDayId      String
+  name              String
+  order             Int
+  sets              Int
+  reps              Int
+  restTimeInSeconds Int
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  workoutDay WorkoutDay @relation(fields: [workoutDayId], references: [id])
+}
