@@ -28,6 +28,8 @@
   },
   "dependencies": {
     "dotenv": "^17.4.1",
-    "fastify": "^5.8.4"
+    "fastify": "^5.8.4",
+    "fastify-type-provider-zod": "^6.1.0",
+    "zod": "^4.3.6"
   }
 }
