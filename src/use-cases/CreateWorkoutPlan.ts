@@ -2,7 +2,8 @@ import { NotFoundError } from "../errors/index.js";
 import { WeekDay } from "../generated/prisma/enums.js";
 import { prisma } from "../lib/db.js";
 
-interface CreateWorkoutPlanDto {
+// Data Transfer Object
+interface InputDto {
   userId: string;
   name: string;
   workoutDays: Array<{
@@ -10,7 +11,7 @@ interface CreateWorkoutPlanDto {
     weekDay: WeekDay;
     isRestDay: boolean;
     estimatedDurationInSeconds: number;
-    coverImageUrl?: string | null;
+    coverImageUrl?: string;
     exercises: Array<{
       order: number;
       name: string;
@@ -21,7 +22,7 @@ interface CreateWorkoutPlanDto {
   }>;
 }
 
-export interface CreateWorkoutPlanResponseDto {
+interface OutputDto {
   id: string;
   name: string;
   workoutDays: Array<{
@@ -29,7 +30,7 @@ export interface CreateWorkoutPlanResponseDto {
     weekDay: WeekDay;
     isRestDay: boolean;
     estimatedDurationInSeconds: number;
-    coverImageUrl?: string | null;
+    coverImageUrl?: string;
     exercises: Array<{
       order: number;
       name: string;
@@ -41,41 +42,37 @@ export interface CreateWorkoutPlanResponseDto {
 }
 
 export class CreateWorkoutPlan {
-  async execute(dto: CreateWorkoutPlanDto): Promise<CreateWorkoutPlanResponseDto> {
+  async execute(dto: InputDto): Promise<OutputDto> {
     const existingWorkoutPlan = await prisma.workoutPlan.findFirst({
       where: {
         isActive: true,
       },
     });
-
+    // Transaction - Atomicidade
     return prisma.$transaction(async (tx) => {
       if (existingWorkoutPlan) {
         await tx.workoutPlan.update({
-          where: {
-            id: existingWorkoutPlan.id,
-          },
-          data: {
-            isActive: false,
-          },
+          where: { id: existingWorkoutPlan.id },
+          data: { isActive: false },
         });
       }
-
-      const newWorkoutPlan = await tx.workoutPlan.create({
+      const workoutPlan = await tx.workoutPlan.create({
         data: {
-          userId: dto.userId,
+          id: crypto.randomUUID(),
           name: dto.name,
+          userId: dto.userId,
           isActive: true,
           workoutDays: {
-            create: dto.workoutDays.map((day) => ({
-              name: day.name,
-              weekDay: day.weekDay,
-              isRestDay: day.isRestDay,
-              estimatedDurationInSeconds: day.estimatedDurationInSeconds,
-              coverImageUrl: day.coverImageUrl,
+            create: dto.workoutDays.map((workoutDay) => ({
+              name: workoutDay.name,
+              weekDay: workoutDay.weekDay,
+              isRestDay: workoutDay.isRestDay,
+              estimatedDurationInSeconds: workoutDay.estimatedDurationInSeconds,
+              coverImageUrl: workoutDay.coverImageUrl,
               exercises: {
-                create: day.exercises.map((exercise) => ({
-                  order: exercise.order,
+                create: workoutDay.exercises.map((exercise) => ({
                   name: exercise.name,
+                  order: exercise.order,
                   sets: exercise.sets,
                   reps: exercise.reps,
                   restTimeInSeconds: exercise.restTimeInSeconds,
@@ -85,11 +82,8 @@ export class CreateWorkoutPlan {
           },
         },
       });
-
-      const result = await tx.workoutPlan.findFirst({
-        where: {
-          id: newWorkoutPlan.id,
-        },
+      const result = await tx.workoutPlan.findUnique({
+        where: { id: workoutPlan.id },
         include: {
           workoutDays: {
             include: {
@@ -98,11 +92,9 @@ export class CreateWorkoutPlan {
           },
         },
       });
-
       if (!result) {
         throw new NotFoundError("Workout plan not found");
       }
-
       return {
         id: result.id,
         name: result.name,
@@ -111,7 +103,7 @@ export class CreateWorkoutPlan {
           weekDay: day.weekDay,
           isRestDay: day.isRestDay,
           estimatedDurationInSeconds: day.estimatedDurationInSeconds,
-          coverImageUrl: day.coverImageUrl,
+          coverImageUrl: day.coverImageUrl ?? undefined,
           exercises: day.exercises.map((exercise) => ({
             order: exercise.order,
             name: exercise.name,
@@ -124,4 +116,3 @@ export class CreateWorkoutPlan {
     });
   }
 }
-
