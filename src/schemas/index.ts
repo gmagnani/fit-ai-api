@@ -29,3 +29,7 @@ export const WorkoutPlanSchema = z.object({
     }),
   ),
 });
+
+export const WorkoutSessionSchema = z.object({
+  userWorkoutSessionId: z.uuid(),
+});
