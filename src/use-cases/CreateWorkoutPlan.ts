@@ -10,6 +10,26 @@ interface CreateWorkoutPlanDto {
     weekDay: WeekDay;
     isRestDay: boolean;
     estimatedDurationInSeconds: number;
+    coverImageUrl?: string | null;
+    exercises: Array<{
+      order: number;
+      name: string;
+      sets: number;
+      reps: number;
+      restTimeInSeconds: number;
+    }>;
+  }>;
+}
+
+export interface CreateWorkoutPlanResponseDto {
+  id: string;
+  name: string;
+  workoutDays: Array<{
+    name: string;
+    weekDay: WeekDay;
+    isRestDay: boolean;
+    estimatedDurationInSeconds: number;
+    coverImageUrl?: string | null;
     exercises: Array<{
       order: number;
       name: string;
@@ -21,7 +41,7 @@ interface CreateWorkoutPlanDto {
 }
 
 export class CreateWorkoutPlan {
-  async execute(dto: CreateWorkoutPlanDto) {
+  async execute(dto: CreateWorkoutPlanDto): Promise<CreateWorkoutPlanResponseDto> {
     const existingWorkoutPlan = await prisma.workoutPlan.findFirst({
       where: {
         isActive: true,
@@ -51,6 +71,7 @@ export class CreateWorkoutPlan {
               weekDay: day.weekDay,
               isRestDay: day.isRestDay,
               estimatedDurationInSeconds: day.estimatedDurationInSeconds,
+              coverImageUrl: day.coverImageUrl,
               exercises: {
                 create: day.exercises.map((exercise) => ({
                   order: exercise.order,
@@ -82,7 +103,25 @@ export class CreateWorkoutPlan {
         throw new NotFoundError("Workout plan not found");
       }
 
-      return result;
+      return {
+        id: result.id,
+        name: result.name,
+        workoutDays: result.workoutDays.map((day) => ({
+          name: day.name,
+          weekDay: day.weekDay,
+          isRestDay: day.isRestDay,
+          estimatedDurationInSeconds: day.estimatedDurationInSeconds,
+          coverImageUrl: day.coverImageUrl,
+          exercises: day.exercises.map((exercise) => ({
+            order: exercise.order,
+            name: exercise.name,
+            sets: exercise.sets,
+            reps: exercise.reps,
+            restTimeInSeconds: exercise.restTimeInSeconds,
+          })),
+        })),
+      };
     });
   }
 }
+

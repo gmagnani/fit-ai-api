@@ -16,6 +16,7 @@ export const WourloutPlanSchema = z.object({
       weekDay: z.enum(WeekDay),
       isRestDay: z.boolean().default(false),
       estimatedDurationInSeconds: z.number().min(1),
+      coverImageUrl: z.string().url().nullish(),
       exercises: z.array(
         z.object({
           order: z.number().min(0),
