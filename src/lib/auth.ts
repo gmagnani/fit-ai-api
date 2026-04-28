@@ -5,7 +5,7 @@ import { openAPI } from "better-auth/plugins";
 import { prisma } from "./db.js";
 
 export const auth = betterAuth({
-  trustedOrigins: ["http://localhost:3000", "http://localhost:8080"],
+  trustedOrigins: ["http://localhost:3000"],
   emailAndPassword: {
     enabled: true,
   },
