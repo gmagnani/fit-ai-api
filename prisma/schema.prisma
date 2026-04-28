@@ -24,8 +24,22 @@ model User {
   image         String?
   sessions      Session[]
   accounts      Account[]
+  trainData     UserTrainData?
 
   @@map("user")
+}
+
+model UserTrainData {
+  id                  String   @id @default(uuid())
+  userId              String   @unique
+  weightInGrams       Int
+  heightInCentimeters Int
+  age                 Int
+  bodyFatPercentage   Float
+  createdAt           DateTime @default(now()) @db.Timestamptz
+  updatedAt           DateTime @updatedAt @db.Timestamptz
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model WorkoutPlan {

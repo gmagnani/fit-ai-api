@@ -119,3 +119,20 @@ export const StatsSchema = z.object({
   conclusionRate: z.number(),
   totalTimeInSeconds: z.number(),
 });
+
+export const UpsertUserTrainDataSchema = z.object({
+  userId: z.string(),
+  weightInGrams: z.number().min(1),
+  heightInCentimeters: z.number().min(1),
+  age: z.number().min(1),
+  bodyFatPercentage: z.number().min(0).max(1),
+});
+
+export const UserTrainDataSchema = z.object({
+  userId: z.string(),
+  userName: z.string(),
+  weightInGrams: z.number(),
+  heightInCentimeters: z.number(),
+  age: z.number(),
+  bodyFatPercentage: z.number(),
+});
