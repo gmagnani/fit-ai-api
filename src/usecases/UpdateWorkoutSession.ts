@@ -39,7 +39,7 @@ export class UpdateWorkoutSession {
     }
 
     const session = await prisma.workoutSession.findUnique({
-      where: { id: dto.sessionId, wourkoutDayId: dto.workoutDayId },
+      where: { id: dto.sessionId, workoutDayId: dto.workoutDayId },
     });
 
     if (!session) {

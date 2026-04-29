@@ -15,7 +15,7 @@ interface OutputDto {
     id: string;
     weekDay: WeekDay;
     name: string;
-    isRestDay: boolean;
+    isRest: boolean;
     coverImageUrl?: string;
     estimatedDurationInSeconds: number;
     exercises: Array<{
@@ -57,7 +57,7 @@ export class ListWorkoutPlans {
         id: day.id,
         weekDay: day.weekDay,
         name: day.name,
-        isRestDay: day.isRestDay,
+        isRest: day.isRest,
         coverImageUrl: day.coverImageUrl ?? undefined,
         estimatedDurationInSeconds: day.estimatedDurationInSeconds,
         exercises: day.exercises.map((exercise) => ({

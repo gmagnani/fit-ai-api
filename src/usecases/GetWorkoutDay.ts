@@ -69,7 +69,7 @@ export class GetWorkoutDay {
     return {
       id: workoutDay.id,
       name: workoutDay.name,
-      isRest: workoutDay.isRestDay,
+      isRest: workoutDay.isRest,
       coverImageUrl: workoutDay.coverImageUrl ?? undefined,
       estimatedDurationInSeconds: workoutDay.estimatedDurationInSeconds,
       weekDay: workoutDay.weekDay,
@@ -84,7 +84,7 @@ export class GetWorkoutDay {
       })),
       sessions: workoutDay.sessions.map((session) => ({
         id: session.id,
-        workoutDayId: session.wourkoutDayId,
+        workoutDayId: session.workoutDayId,
         startedAt: dayjs.utc(session.startedAt).format("YYYY-MM-DD"),
         completedAt: session.completedAt
           ? dayjs.utc(session.completedAt).format("YYYY-MM-DD")

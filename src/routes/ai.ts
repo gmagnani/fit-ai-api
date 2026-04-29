@@ -153,7 +153,7 @@ export const aiRoutes = async (app: FastifyInstance) => {
                       .string()
                       .describe("Nome do dia (ex: Peito e Tríceps, Descanso)"),
                     weekDay: z.enum(WeekDay).describe("Dia da semana"),
-                    isRestDay: z
+                    isRest: z
                       .boolean()
                       .describe(
                         "Se é dia de descanso (true) ou treino (false)"

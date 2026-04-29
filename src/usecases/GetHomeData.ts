@@ -143,7 +143,7 @@ export class GetHomeData {
         workoutPlanId: activeWorkoutPlan.id,
         id: todayWorkoutDay.id,
         name: todayWorkoutDay.name,
-        isRest: todayWorkoutDay.isRestDay,
+        isRest: todayWorkoutDay.isRest,
         weekDay: todayWorkoutDay.weekDay,
         estimatedDurationInSeconds: todayWorkoutDay.estimatedDurationInSeconds,
         coverImageUrl: todayWorkoutDay.coverImageUrl ?? undefined,
@@ -158,7 +158,7 @@ export class GetHomeData {
     activeWorkoutPlan: {
       workoutDays: Array<{
         weekDay: WeekDay;
-        isRestDay: boolean;
+        isRest: boolean;
         sessions: Array<{
           startedAt: Date;
           completedAt: Date | null;

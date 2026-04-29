@@ -52,7 +52,7 @@ export class GetWorkoutPlan {
         id: day.id,
         weekDay: day.weekDay,
         name: day.name,
-        isRest: day.isRestDay,
+        isRest: day.isRest,
         coverImageUrl: day.coverImageUrl ?? undefined,
         estimatedDurationInSeconds: day.estimatedDurationInSeconds,
         exercisesCount: day._count.exercises,

@@ -58,7 +58,7 @@ model WorkoutDay {
   name                       String
   workoutPlanId              String
   workoutPlan                WorkoutPlan       @relation(fields: [workoutPlanId], references: [id], onDelete: Cascade)
-  isRestDay                  Boolean           @default(false)
+  isRest                     Boolean           @default(false)
   weekDay                    WeekDay
   exercises                  WorkoutExercise[]
   estimatedDurationInSeconds Int

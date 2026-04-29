@@ -58,7 +58,7 @@ export class StartWorkoutSession {
 
     const session = await prisma.workoutSession.create({
       data: {
-        wourkoutDayId: workoutDay.id,
+        workoutDayId: workoutDay.id,
         startedAt: new Date(),
       },
     });
