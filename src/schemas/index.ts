@@ -151,10 +151,10 @@ export const StatsSchema = z.object({
 
 export const UpsertUserTrainDataSchema = z.object({
   userId: z.string(),
-  weightInGrams: z.number().min(1),
-  heightInCentimeters: z.number().min(1),
-  age: z.number().min(1),
-  bodyFatPercentage: z.number().min(0).max(1),
+  weightInGrams: z.number().int().min(1),
+  heightInCentimeters: z.number().int().min(1),
+  age: z.number().int().min(1),
+  bodyFatPercentage: z.number().int().min(0).max(100),
 });
 
 export const UserTrainDataSchema = z.object({
